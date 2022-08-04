@@ -1,0 +1,24 @@
+﻿<p>Welcome to register</p>
+
+
+<form method="post" asp-controller="login" asp-action="login">
+    <table border="0" cellpadding="2" cellspacing="2">
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="Email" required></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" required></td>
+        </tr>
+        <tr>
+            @*<td>&nbsp;</td>*@
+            <td><input type="submit" value="Login"></td>
+        </tr>
+        <div>
+            <a asp-action="ForgotPassword">Forgot Password?</a>
+            <a asp-controller="Register" asp-action="Index">Register?</a>
+
+        </div>
+    </table>
+</form>

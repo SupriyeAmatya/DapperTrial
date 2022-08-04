@@ -1,0 +1,80 @@
+﻿@model DapperTrial.Models.User
+@{
+
+    ViewBag.Title = "Registration";
+}
+<div class="container d-flex justify-content-center h-100 form_container">
+    <div class="card" style="width: 30rem;" id="asd">
+         <div class="card-body">
+        <h2 class="card-title d-flex flex-column bd-highlight mb-3 justify-content-between text-center">Registration</h2>
+
+        @if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+        {
+            if (ViewBag.Message != null)
+            {
+                <div class="alert alert-success">
+                    <strong>Success!</strong>@ViewBag.Message
+                </div>
+            }
+        }
+        else
+        {
+
+            <div class="row">
+                <div class="col">
+                    <form asp-action="Registration">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Username" class="control-label"></label>
+                            <input asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phonenumber" class="control-label"></label>
+                            <input asp-for="Phonenumber" class="form-control" />
+                            <span asp-validation-for="Phonenumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="control-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-grid gap-2 align-content-center">
+                                <button class="btn btn-primary w-100" type="submit" value="Create">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+</div>
+<div class="container d-flex justify-content-center h-100 form_container">
+    <a class="text-center m-2" asp-controller="Login" asp-action="Index">Return to Login Page</a>
+</div>
+
+@section scripts{
+    <script src="~/scripts/jquery.validate.min.js"></script>
+    <script src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+}
+
+
