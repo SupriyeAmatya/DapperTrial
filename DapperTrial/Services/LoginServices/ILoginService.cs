@@ -7,6 +7,9 @@ namespace DapperTrial.Services.LoginServices
     {
 
         Users Login(string email, string password);
+        public GenericResponseModel FGPASS(ForgotPasswordViewModel model, string url);
+
+        //public ChangePasswordViewModel changePassword(string newpassword, string oldpassword);
         //Task<String> ForgotPassword(ForgotPasswordViewModel model);
     }
 }

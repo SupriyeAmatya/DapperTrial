@@ -7,6 +7,7 @@ namespace DapperTrial.Models.ViewModel
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+       
     }
 
 }

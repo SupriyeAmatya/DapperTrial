@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Web;
 
 
 namespace DapperTrial.Controllers
@@ -84,18 +85,37 @@ namespace DapperTrial.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPassword()
+        public IActionResult _ForgotPassword()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            return View();
+           
+
+            var url = Url.Action(action: "ChangePassword", controller: "Login", values: null, protocol: "https");
+            GenericResponseModel response = _loginService.FGPASS(model, url);
+
+            return Json(new { code = response.status, message = response.message });
 
 
         }
+
+        [HttpGet]
+        public IActionResult ChangePassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        //login button click action method 
+        public IActionResult ChangePassword(string newpassword, string confirmpassword, string token)
+        {
+            return View();
+        }
+
     }
 }

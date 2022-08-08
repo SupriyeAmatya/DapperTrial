@@ -54,7 +54,7 @@ namespace DapperTrial.Controllers
 
                 #region //Email is already Exist 
                 var isExist = IsEmailExist(user.Email);
-                if (isExist)
+                if (isExist>0)
                 {
                     ModelState.AddModelError("EmailExist", "Email already exist");
                     return View(user);
@@ -228,20 +228,18 @@ namespace DapperTrial.Controllers
             smtp.Send(message);
         }
 
-        private bool IsEmailExist(string email)
+        private int IsEmailExist(string email)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var emailexist = "Select * From Users where Email = @email";
-                DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@email", email);
+                var emailexist = "Select Count(*) From Users where Email = @email";
+                DynamicParameters parameters2 = new DynamicParameters();
+                parameters2.Add("@email", email);
 
-                var runqry = db.Execute(emailexist, parameters);
+                int runqry = db.Query<int>(emailexist, parameters2).SingleOrDefault();
+                
 
-
-                //var v = dc.Users.Where(a => a.Email == email).FirstOrDefault();
-                //return v != null;
-                return (runqry > 0);
+                return runqry;
             }
         }
     }
