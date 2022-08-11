@@ -70,7 +70,10 @@ namespace DapperTrial.Controllers
                 user.ConfirmPassword = Crypto.Hash(user.ConfirmPassword); //
                 #endregion
                 bool IsEmailVerified = false;
-
+                bool TokenUsed = false;
+                DateTime currentTime = DateTime.Now;
+                DateTime x30MinsLater = currentTime.AddMinutes(30);
+                
                 #region Save to Database
                 using (IDbConnection db = new SqlConnection(_connectionString))
                 {
@@ -79,7 +82,7 @@ namespace DapperTrial.Controllers
                     string roleq = "undefined";
 
                     string sqlQuery = "Insert into Users (Username, Password, Address, Phonenumber, Email, Role, IsEmailVerified, ActivationCode) Values (@Username, @Password, @Address, @Phonenumber, @Email, @Role, @IsEmailVerified, @ActivationCode) ";
-
+                    string tokenqry = "Insert into TokenExpiry (Email, Token, ExpirationDate, TokenUsed) Values (@Email, @ActivationCode, @Date, @TokenUsed)";
                     DynamicParameters parameters = new DynamicParameters();
                     parameters.Add("@Username", user.Username);
                     parameters.Add("@Email", user.Email);
@@ -88,17 +91,21 @@ namespace DapperTrial.Controllers
                     parameters.Add("@Phonenumber", user.Phonenumber);
                     parameters.Add("@Role", roleq);
                     parameters.Add("@IsEmailVerified", IsEmailVerified);
+                    parameters.Add("@Date", x30MinsLater);
+                    parameters.Add("@TokenUsed", TokenUsed);
                     parameters.Add("@ActivationCode", ActivationCode);
                     try
                     {
                         var runqry = db.Execute(sqlQuery, parameters);
+                        var runtokenqry = db.Execute(tokenqry, parameters);
                     }
                     catch (Exception ex)
                     {
 
                     }
+                    var url = Url.Action(action: "VerifyAccount", controller: "User", values: null, protocol: "https");
                     //Send Email to User
-                    SendVerificationLinkEmail(user.Email, ActivationCode.ToString());
+                    SendVerificationLinkEmail(user.Email, url, ActivationCode.ToString());
                     message = "Registration successfully done. Account activation link " +
                         " has been sent to your email id:" + user.Email;
                     Status = true;
@@ -115,29 +122,32 @@ namespace DapperTrial.Controllers
             return View(user);
         }
         [HttpGet]
-        public ActionResult VerifyAccount(string id)
+        public ActionResult VerifyAccount(string token)
         {
             bool Status = false;
             using (IDbConnection dc = new SqlConnection(_connectionString))
             {
                 //dc.Configuration.ValidateOnSaveEnabled = false; // This line I have added here to avoid 
                 // Confirm password does not match issue on save changes
-                var veracc = "Select * From Users Where ActivationCode = @id";
+
+                DateTime currentTime = DateTime.Now;
+                var veracc = "Select * From TokenExpiry Where Token = @token and expirationDate>= @time";
 
                 DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@id", new Guid(id));
-
+                parameters.Add("@token", token);
+                parameters.Add("@time", currentTime);
 
                 var v = dc.Execute(veracc, parameters);
                 //var v = dc.Users.Where(a => a.ActivationCode == new Guid(id)).FirstOrDefault();
                 if (v != null)
                 {
-                    var veremail = "Update ISEmailVerified = 0 where ActivationCode = @id";
+                    bool state = true;
+                    var veremail = "Update Users set IsEmailVerified = @true where ActivationCode = @token";
                     DynamicParameters parameters2 = new DynamicParameters();
-                    parameters.Add("@id", new Guid(id));
+                    parameters2.Add("@token", token);
+                    parameters2.Add("@true", state);
 
-
-                    var vere = dc.Execute(veracc, parameters2);
+                    var vere = dc.Execute(veremail, parameters2);
 
                     //v.IsEmailVerified = true;
                     //dc.SaveChanges();
@@ -155,32 +165,14 @@ namespace DapperTrial.Controllers
 
 
 
-
         [NonAction]
-        public void SendVerificationLinkEmail(string emailID, string activationCode)
+        public void SendVerificationLinkEmail(string emailID, string url, string activationCode)
         {
-            var uriBuilder = new UriBuilder
-            {
-                Scheme = Request.Scheme,
-                Host = Request.Host.ToString(),
-                //Path = $"/User/VerifyAccount/{activationCode}"
-            };
+           
 
 
-            //var link = uriBuilder.Uri.AbsoluteUri;
-            string verifyUrl = $"/User/VerifyAccount/" + activationCode.ToString();
+            string verifyUrl = url + "?token=" + activationCode;
 
-            if (!verifyUrl.StartsWith("http:"))
-                verifyUrl = "http://" + verifyUrl;
-            Uri uri;
-            Uri.TryCreate(verifyUrl, UriKind.RelativeOrAbsolute, out uri);
-            //if (!Uri.TryCreate(verifyUrl, UriKind.Absolute, out uril))
-            //{
-            //    //Bad bad bad!
-            //    var verifyUri = $"/User/VerifyAccount/" + activationCode.ToString();
-
-            //}
-            //var link = uriBuilder.Uri.AbsoluteUri.Replace(uriBuilder.Uri.PathAndQuery, verifyUrl);
 
             var fromEmail = new MailAddress("test@microbankernepal.com.np"/*, "Dotnet Awesome"*/);
             var toEmail = new MailAddress(emailID);
@@ -190,8 +182,7 @@ namespace DapperTrial.Controllers
             string body = "<h3>Welcome @ViewBag.Username</h3>" +
                 "<br/><br/>We are excited to tell you that your Dotnet Awesome account is" +
                 " successfully created. Please click on the below link to verify your account" +
-                " <br/><br/><a href='" + uri + "'>" + uri + "</a> ";
-           
+                " <br/><br/><a href='" + verifyUrl + "'> Click here </a> ";
 
             var smtp = new SmtpClient
             {

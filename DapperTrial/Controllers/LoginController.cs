@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Web;
-
+using Dapper;
 
 namespace DapperTrial.Controllers
 {
@@ -94,7 +94,7 @@ namespace DapperTrial.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-           
+
 
             var url = Url.Action(action: "ChangePassword", controller: "Login", values: null, protocol: "https");
             GenericResponseModel response = _loginService.FGPASS(model, url);
@@ -107,15 +107,39 @@ namespace DapperTrial.Controllers
         [HttpGet]
         public IActionResult ChangePassword(string token)
         {
-            return View();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            DateTime currentTime = DateTime.Now;
+            bool tokenused = false;
+            var sql = "Select * from TokenExpiry where Token = @token and expirationDate>= @time and tokenUsed = @tokenused";
+            DynamicParameters par = new DynamicParameters();
+            par.Add("@token", token);
+            par.Add("@time",currentTime);
+            par.Add("@tokenused", tokenused);
+            var runqry = connection.Query<int>(sql, par).SingleOrDefault();
+            if (runqry > 0)
+            {
+                TempData["PassedToken"] = token;
+                return View();
+
+            }
+            return RedirectToAction(controllerName: "Login", actionName: "Index");
         }
 
         [HttpPost]
         //login button click action method 
-        public IActionResult ChangePassword(string newpassword, string confirmpassword, string token)
+        public IActionResult ChangePassword(string newpassword, string confirmpassword)
         {
-            return View();
+
+            string token = "";
+            if (TempData["PassedToken"] != null)
+            {
+                token = TempData["PassedToken"].ToString();
+            }
+            var savedToken = token;
+            var Data = _loginService.changePassword(newpassword, confirmpassword, savedToken);
+            return RedirectToAction(controllerName: "Login", actionName: "Index");
         }
 
     }
 }
+    

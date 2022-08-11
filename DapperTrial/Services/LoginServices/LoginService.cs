@@ -58,12 +58,18 @@ namespace DapperTrial.Services.LoginServices
                 Guid resettoken = Guid.NewGuid();
                 SqlConnection connection = new SqlConnection(_connectionString);
 
-                
-                var sql = "Update Users set PasswordResetToken = @passresettoken where Email = @email";
+                DateTime currentTime = DateTime.Now;
+                DateTime x30MinsLater = currentTime.AddMinutes(30);
+                bool tokenused = false;
+                var sql2 = "Update Users set PasswordResetToken = @passresettoken where Email = @email";
+                var sql = "Update TokenExpiry set Token = @passresettoken, expirationDate = @time where Email = @email";
                 DynamicParameters parameters = new DynamicParameters();
                 parameters.Add("@passresettoken", resettoken);
                 parameters.Add("@email", model.Email);
+                parameters.Add("@time", x30MinsLater);
+                parameters.Add("@tokenused", tokenused);
                 var runqry = connection.QuerySingleOrDefault<Users>(sql, parameters);
+                var runqry2 = connection.QuerySingleOrDefault<Users>(sql2, parameters);
                 SendResetLinkEmail(model.Email, url, resettoken.ToString());
                 grm.status = 0;
                 grm.message = "Success";
@@ -75,18 +81,26 @@ namespace DapperTrial.Services.LoginServices
         }
 
 
-        //public ChangePasswordViewModel changePassword(string newpassword, string oldpassword)
-        //{
+        public int changePassword(string newpassword, string oldpassword, string token)
+        {
 
 
 
-        //    SqlConnection connection = new SqlConnection(_connectionString);
+            SqlConnection connection = new SqlConnection(_connectionString);
 
-        //    newpassword = Crypto.Hash(newpassword);
-        //    var sql = "Update Users set Password = @newpassword where PasswordResetToken=@token";
+            newpassword = Crypto.Hash(newpassword);
+            bool tokenused = true;
+            var sql = "Update Users set Password = @newpassword where PasswordResetToken=@token";
+            var sql2 = "Update TokenExpiry set tokenUsed = @tokenused where Token=@token";
+            DynamicParameters par = new DynamicParameters();
+            par.Add("@token", token);
+            par.Add("@newpassword", newpassword);
+            par.Add("@tokenused", tokenused);
+            var runsql = connection.Execute(sql, par);
+            var runsql2 = connection.Execute(sql2, par);
+            return runsql;
 
-
-        //}
+        }
 
         public void SendResetLinkEmail(string emailID, string url,  string resettoken)
         {
@@ -102,7 +116,7 @@ namespace DapperTrial.Services.LoginServices
             //}
 
             string finalurl = url + "?token=" + resettoken;
-            var fromEmail = new MailAddress("test@microbankernepal.com.np"/*, "Dotnet Awesome"*/);
+            var fromEmail = new MailAddress("test@microbankernepal.com.np");
             var toEmail = new MailAddress(emailID);
             var fromEmailPassword = "Server@123"; // Replace with actual password
             string subject = "Email Change";
