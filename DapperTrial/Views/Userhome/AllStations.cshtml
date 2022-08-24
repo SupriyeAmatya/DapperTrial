@@ -1,0 +1,90 @@
+﻿@model IEnumerable<DapperTrial.Models.ViewModel.VehicleByTypeViewModel>
+@{
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Start Feature 1: Search DVD title by Actor Surname -->
+    <section class="bg-light">
+        <div class="row d-flex justify-content-between py-5 px-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Display Vehicle</h5>
+                        <p class="card-text">By Station</p>
+                        <div class="row d-flex justify-content-between py-5 px-5">
+                            <form asp-action="AllStations" asp-controller="Userhome">
+                                <div class="col-md-12">
+
+
+                                    <select class="form-control" id="station" name="station" asp-items="@ViewBag.AllVehiclesListStation " value="@if(@ViewBag.AllVehiclesListStation != null){
+                                    @ViewBag.AllVehiclesListStation}" required>
+                                    </select>
+                                   
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit"><i class="fa fa-search"></i>Search</button>
+                                </div>
+                            </form>
+                        </div>
+                        @if (ViewBag.VehicleStList != null)
+                        {
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Vehicle Name
+                                        </th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.VehicleStList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.VehileName
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Feature 1  -->
+        </div>
+    </section>
+</body>
+</html>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjscloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+    <script src="https://cdnjscloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+
+    <script>
+        $(document).ready(function() {
+    $("#station").select2();
+});
+    </script>
+}
+
+

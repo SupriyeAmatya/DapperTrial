@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DapperTrial.Models.ViewModel.RentVehicleViewModel>
+@{
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Start Feature 1: Search DVD title by Actor Surname -->
+    <section class="bg-light">
+        <div class="row d-flex justify-content-between py-5 px-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        @if (ViewBag.AllVehiclesList != null)
+                        {
+                            <h5 class="card-title text-center">Available Vehicles</h5>
+                            <div class="row">
+
+                                @foreach (var item in ViewBag.AllVehiclesList)
+                                {
+
+                                    <div class="col-md-4 col-lg-2.5 pb-5">
+                                        <a href="@Url.Action("About", "Userhome")">
+
+                                            <div class="h-100 py-5 services-icon-wap shadow">
+                                                <div class="h1 text-success text-center"><i class="fa fa-user"></i></div>
+
+                                                @item.VehileName
+
+                                            </div>
+                                        </a>
+
+                                    </div>
+
+
+                                }
+                            </div>
+
+                        }
+                        else
+                        {
+
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Feature 1  -->
+        </div>
+    </section>
+</body>
+</html>

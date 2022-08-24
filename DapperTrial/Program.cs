@@ -1,5 +1,9 @@
 using DapperTrial.Models.DataModel;
 using DapperTrial.Services.LoginServices;
+using DapperTrial.Services.RentvehicleServices;
+using DapperTrial.Services.StationServices;
+using DapperTrial.Services.UserhomeServices;
+using DapperTrial.Services.VehicleServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,6 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IVehicleService, VehileService>();
+builder.Services.AddScoped<IStationService, StationService>();
+builder.Services.AddScoped<IUserHomeService, UserhomeService>();
+builder.Services.AddScoped<IRentvehicleService, RentvehicleService>();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddHttpClient();
@@ -49,6 +58,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+    pattern: "{controller=Rentvehicle}/{action=Index}/{id?}");
 
 app.Run();

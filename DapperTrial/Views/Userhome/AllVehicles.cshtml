@@ -1,0 +1,67 @@
+﻿@model IEnumerable<DapperTrial.Models.DataModel.Vehicle>
+@{
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Start Feature 1: Search DVD title by Actor Surname -->
+    <section class="bg-light">
+        <div class="row d-flex justify-content-between py-5 px-5">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Display Vehicle</h5>
+                        <p class="card-text">By Type</p>
+                        <div class="row d-flex justify-content-between py-5 px-5">
+                            <form asp-action="AllVehicles" asp-controller="Userhome">
+                                <div class="col-md-6">
+                                    <input type="text" placeholder="Search.." name="VehicleType" id="VehicleType" value="@if(@ViewBag.AllVehicleType != null){
+                                    @ViewBag.AllVehicleType}" required />
+                                        @*@Html.DropDownList("VehicleType", (IEnumerable<SelectListItem>)ViewBag.AllVehiclesList, new { id = "Id", @class = "form-control" })*@
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit"><i class="fa fa-search"></i>Search</button>
+                                </div>
+                            </form>
+                        </div>
+                        @if (Model != null)
+                        {
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Vehicle Name
+                                        </th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.VehileName
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Feature 1  -->
+        </div>
+    </section>
+</body>
+</html>
