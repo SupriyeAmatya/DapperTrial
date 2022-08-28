@@ -1,15 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using DapperTrial.Models.DataModel;
+using System.ComponentModel.DataAnnotations;
 
-namespace DapperTrial.Models.DataModel
+namespace DapperTrial.Models.DTO
 {
- 
-
-    public partial class Vehicle
+    public class VehicleDTO
     {
-        public Vehicle()
-        {
-            Vehicleimages = new HashSet<VehicleImage>();
-        }
         public int Id { get; set; }
         public string VehicleName { get; set; }
         public string PlateNo { get; set; }
@@ -21,9 +16,8 @@ namespace DapperTrial.Models.DataModel
         public string VehicleKind { get; set; }
         public string WhereStored { get; set; }
         public string Tracker { get; set; }
-        public string VehicleImage { get; set; }
-
-        [InverseProperty("Vehicle")]
-        public virtual ICollection<VehicleImage> Vehicleimages { get; set; }
+        [DataType(DataType.Upload)]
+        [Required(ErrorMessage = "Please choose at least one image.")]
+        public IFormFileCollection VehicleImages { get; set; }
     }
 }

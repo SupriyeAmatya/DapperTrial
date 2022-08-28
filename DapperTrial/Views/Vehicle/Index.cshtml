@@ -1,104 +1,101 @@
 ﻿@model IEnumerable<DapperTrial.Models.DataModel.Vehicle>
-@{
 
-    Layout = "~/Views/Shared/_NewLayout.cshtml";
+@{
+    ViewData["Title"] = "Index";
 }
+
+<h1>Index</h1>
+
 <p>
     <a asp-action="add">Create New</a>
 </p>
-<div class="container">
-
-    <table class="table">
-        <thead>
-            <tr>
-                @* <th>
-                @Html.DisplayNameFor(model => model.Id)
-                </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.VehileName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PlateNo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RentPerHr)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RentPerDay)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RentPerWeek)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LateFee)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Availability)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.VehicleType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.VehicleKind)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.WhereStored)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tracker)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    @*<td>
-                @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VehileName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PlateNo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RentPerHr)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RentPerDay)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RentPerWeek)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LateFee)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Availability)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VehicleType)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VehicleKind)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.WhereStored)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tracker)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                        @Html.ActionLink("Details", "Details", new {id=item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+             @*   @Html.DisplayNameFor(model => model.Id)*@
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlateNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InitialRentPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentRatePerHr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Penalty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Availability)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleKind)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WhereStored)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tracker)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+               @* @Html.DisplayFor(modelItem => item.Id)*@
+                   <div class="d-flex align-items-center">
+                        <img src="~/@item.VehicleImage"
+                         alt=""
+                         style="width: 45px; height: 45px"
+                         class="rounded-circle" />
+                    </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlateNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InitialRentPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentRatePerHr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Penalty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Availability)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleKind)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WhereStored)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tracker)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,15 +1,16 @@
 ﻿using DapperTrial.Models.DataModel;
+using DapperTrial.Models.DTO;
 
 namespace DapperTrial.Services.VehicleServices
 {
     public interface IVehicleService
     {
-        public void AddVehicle(Vehicle vehicle);
+        Task AddVehicleAsync(VehicleDTO vehicle);
         IEnumerable<Vehicle> GetVehicles();
-
-              Vehicle DetailsVehicle(int VehicleId);
-        Vehicle GetVehicleById(int VehicleId);
-        void UpdateVehicle(Vehicle Vehicle);
-        void DeleteUser(int VehicleId);
+        public Vehicle DetailsVehicle(int VehicleId);
+        //      Vehicle DetailsVehicle(int VehicleId);
+        //Vehicle GetVehicleById(int VehicleId);
+        //void UpdateVehicle(Vehicle Vehicle);
+        //void DeleteUser(int VehicleId);
     }
 }

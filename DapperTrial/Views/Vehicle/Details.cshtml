@@ -1,87 +1,106 @@
 ﻿@model DapperTrial.Models.DataModel.Vehicle
-@{
 
-    Layout = "~/Views/Shared/_NewLayout.cshtml";
+@{
+    ViewData["Title"] = "Details";
 }
-<div class="container">
+
+<h1>Details</h1>
+
+<div>
     <h4>Vehicle</h4>
     <hr />
     <dl class="row">
-        @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>*@
-      @*  <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>*@
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VehileName)
+        @*     <dt class = "col-sm-2">
+        @Html.DisplayNameFor(model => model.Id)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VehileName)
+        @Html.DisplayFor(model => model.Id)
+        </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VehicleName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PlateNo)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PlateNo)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RentPerHr)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InitialRentPrice)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RentPerHr)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.InitialRentPrice)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RentPerDay)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RentRatePerHr)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RentPerDay)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RentRatePerHr)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RentPerWeek)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Penalty)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RentPerWeek)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Penalty)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LateFee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LateFee)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Availability)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Availability)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleType)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleType)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.VehicleKind)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleKind)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.WhereStored)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.WhereStored)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Tracker)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Tracker)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleImage)
+        </dt>
+        <dd class="col-sm-10">
+             @{var isFirst = true;}
+            @foreach (var image in Model.VehicleImage)
+            {
+                if (isFirst)
+                {
+                    <div class="carousel-item active" style="height:300px;" data-bs-interval="3000">
+                        <img class="img-fluid mw-100 mh-100" src="~/@image" class="d-block w-100" alt="@image" />
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item" style="height:300px;" data-bs-interval="2000">
+                        <img class="img-fluid mw-100 mh-100" src="~/@image" class="d-block w-100" alt="@image">
+                    </div>
+                }
+                isFirst = false;
+            }
         </dd>
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id  }) |
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>

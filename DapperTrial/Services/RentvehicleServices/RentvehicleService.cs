@@ -27,7 +27,7 @@ namespace DapperTrial.Services.RentvehicleServices
             {
                 List.Add(new Vehicle()
                 {
-                 VehileName = vehicle.VehileName
+                 VehicleName = vehicle.VehicleName
                 });
             }
             return List;
