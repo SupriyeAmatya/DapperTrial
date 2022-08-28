@@ -55,49 +55,47 @@ namespace DapperTrial.Services.VehicleServices
         public async Task AddVehicleAsync(VehicleDTO vehicle)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
-
-            using (connection.BeginTransaction())
+            var userData = new Vehicle()
             {
-                var userData = new Vehicle()
-                {
-                    VehicleName = vehicle.VehicleName,
-                    PlateNo = vehicle.PlateNo,
-                    RentRatePerHr = vehicle.RentRatePerHr,
-                    InitialRentPrice = vehicle.InitialRentPrice,
-                    Penalty = vehicle.Penalty,
-                    Availability = vehicle.Availability,
-                    VehicleType = vehicle.VehicleType,
-                    VehicleKind = vehicle.VehicleKind,
-                    WhereStored = vehicle.WhereStored,
-                    Tracker = vehicle.Tracker,
+                VehicleName = vehicle.VehicleName,
+                PlateNo = vehicle.PlateNo,
+                RentRatePerHr = vehicle.RentRatePerHr,
+                InitialRentPrice = vehicle.InitialRentPrice,
+                Penalty = vehicle.Penalty,
+                Availability = vehicle.Availability,
+                VehicleType = vehicle.VehicleType,
+                VehicleKind = vehicle.VehicleKind,
+                WhereStored = vehicle.WhereStored,
+                Tracker = vehicle.Tracker,
 
-                };
-                // Save the images to the folder in server.
-                var filePaths = await SaveImages(vehicle.VehicleImages, userData);
+            };
+            string sqlQuery = "Insert Into Vehicle ( VehicleName, PlateNo, InitialPrice, RentRatePerHr, Penalty, Availability, VehicleType, VehicleKind, WhereStored, Tracker ) Values( @VehileName, @PlateNo, @InitialPrice, @RentRatePerHr, @Penalty, @Availability, @VehicleType, @VehicleKind, @WhereStored, @Tracker)";
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@VehileName", userData.VehicleName);
+            parameters.Add("@PlateNo", userData.PlateNo);
+            parameters.Add("@InitialPrice", userData.InitialRentPrice);
+            parameters.Add("@RentRatePerHr", userData.RentRatePerHr);
+            parameters.Add("@Penalty", userData.Penalty);
+            parameters.Add("@Availability", userData.Availability);
+            parameters.Add("@VehicleType", userData.VehicleType);
+            parameters.Add("@VehicleKind", userData.VehicleKind);
+            parameters.Add("@WhereStored", userData.WhereStored);
+            parameters.Add("@Tracker", userData.Tracker);
+            var rowsAffected = connection.Execute(sqlQuery, parameters);
 
-                foreach (string path in filePaths)
-                {
-                    string sqlQuery2 = "Insert Into VehicleImages ( Vehiclenumber, Vehicleimage) Values( @Vehiclenumber, @Vehicleimage)";
-                    DynamicParameters parameters2 = new DynamicParameters();
-                    parameters2.Add("@Vehiclenumber", userData.PlateNo);
-                    parameters2.Add("@Vehicleimage", path);
-                    var rowsAffected2 = connection.Execute(sqlQuery2, parameters2);
-                }
+            // Save the images to the folder in server.
+            var filePaths =  await SaveImages(vehicle.VehicleImages, userData);
 
-                string sqlQuery = "Insert Into Vehicle ( VehicleName, PlateNo, InitialPrice, RentRatePerHr, Penalty, Availability, VehicleType, VehicleKind, WhereStored, Tracker ) Values( @VehileName, @PlateNo, @InitialPrice, @RentRatePerHr, @Penalty, @Availability, @VehicleType, @VehicleKind, @WhereStored, @Tracker)";
-                DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@VehileName", userData.VehicleName);
-                parameters.Add("@PlateNo", userData.PlateNo);
-                parameters.Add("@InitialPrice", userData.InitialRentPrice);
-                parameters.Add("@RentRatePerHr", userData.RentRatePerHr);
-                parameters.Add("@Penalty", userData.Penalty);
-                parameters.Add("@Availability", userData.Availability);
-                parameters.Add("@VehicleType", userData.VehicleType);
-                parameters.Add("@VehicleKind", userData.VehicleKind);
-                parameters.Add("@WhereStored", userData.WhereStored);
-                parameters.Add("@Tracker", userData.Tracker);
-                var rowsAffected = connection.Execute(sqlQuery, parameters);
+            foreach (string path in filePaths)
+            {
+                string sqlQuery2 = "Insert Into VehicleImages ( Vehiclenumber, Vehicleimage) Values( @Vehiclenumber, @Vehicleimage)";
+                DynamicParameters parameters2 = new DynamicParameters();
+                parameters2.Add("@Vehiclenumber", userData.PlateNo);
+                parameters2.Add("@Vehicleimage", path);
+                var rowsAffected2 = connection.Execute(sqlQuery2, parameters2);
             }
+
+        
 
             
             connection.Close();
